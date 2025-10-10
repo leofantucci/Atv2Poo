@@ -16,8 +16,8 @@ public class Repositorio {
 	
 	public void adicionarPessoa(Pessoa p) {
 		pessoas.add(p);
-		id++;
 		p.setId(id);
+		id++;
 	}
 	
 	public void mostrarPessoas() {
@@ -43,12 +43,29 @@ public class Repositorio {
 		return pessoas;
 	}
 	
+	public ArrayList<Integer> getIdPessoas(){
+		ArrayList<Integer> ret = new ArrayList<>();
+		for(Pessoa p : pessoas) {
+			ret.add(p.getId());
+		}
+		return ret;
+	}
+	
 	public String getNomePorId(int id) {
 		return pessoas.get(id).getNome();
 	}
 	
 	public String getEmailPorId(int id) {
 		return pessoas.get(id).getEmail();
+	}
+	
+	public Pessoa getPessoaPorId(int id) {
+		for(Pessoa p : pessoas) {
+			if(p.getId() == id) {
+				return p;
+			}
+		}
+		return null;
 	}
 	
 }

@@ -32,13 +32,12 @@ public class FormCadastro extends JDialog {
 	
 	private Repositorio rep;
 	private int pessoaAdicionada = 0;
+	private int pessoaAtualizada = 0;
 	
 	public FormCadastro(int key, Pessoa p, Frame parent, Repositorio rep) {
 	    super(parent, "Cadastro de Pessoa", true);
 	    this.rep = rep;
-		Pessoa p1 = new Pessoa();
-		p1.setId(rep.getIdAtual());
-	
+	    
 		setBounds(100, 100, 450, 300);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -87,19 +86,17 @@ public class FormCadastro extends JDialog {
 		buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		getContentPane().add(buttonPane, BorderLayout.SOUTH);
 		
-		switch(key) {
-			case 1:
-			textFieldCodigo.setText(Integer.toString(p.getId())); 
-			textFieldNome.setText(p.getNome());
-			textFieldEmail.setText(p.getEmail());
-		}
-		
 		JButton btnCadastrar = new JButton("Cadastrar");
 		btnCadastrar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(validaTextField(textFieldNome, "Nome") && validaTextField(textFieldEmail, "Email")) {
-					if(key == 0) {
-						salvarPessoa();
+					switch(key) { //key = Seleção entre add(0) / Atualizar user (1) 
+						case 0:
+							salvarPessoa();
+							break;
+						case 1:
+							atualizaPessoa(p);
+							break;		
 					}
 				}	
 			}
@@ -117,14 +114,32 @@ public class FormCadastro extends JDialog {
 				btnCancelar.setFont(new Font("Tahoma", Font.PLAIN, 14));
 				btnCancelar.setActionCommand("Cancel");
 				buttonPane.add(btnCancelar);
-	
+				
+				switch(key) { // Alterar (1), Visualizar (2)
+				case 1:
+					setTitle("Edição de Pessoa");
+					textFieldCodigo.setText(Integer.toString(p.getId())); 
+					textFieldNome.setText(p.getNome());
+					textFieldEmail.setText(p.getEmail());
+					break;
+				
+				case 2:
+					setTitle("Visualização de Pessoa");
+					textFieldCodigo.setText(Integer.toString(p.getId()));
+					textFieldCodigo.setEditable(false);
+					textFieldNome.setText(p.getNome());
+					textFieldNome.setEditable(false);
+					textFieldEmail.setText(p.getEmail());
+					textFieldEmail.setEditable(false);
+					btnCadastrar.setVisible(false);
+					break;
+			}
 	}
 	
 	public Repositorio criarRep() {
 		Repositorio rep = new Repositorio();
 		return rep;
 	}
-	
 	
 	public void salvarPessoa() {
 		Pessoa p = new Pessoa();
@@ -136,19 +151,24 @@ public class FormCadastro extends JDialog {
 		String email = textFieldEmail.getText().trim();
 		System.out.println(pessoaAdicionada);
 
-		if(!textFieldNome.getText().trim().isEmpty() && !textFieldEmail.getText().trim().isEmpty()) {
+		if(validaTextField(textFieldNome, "nome") && validaTextField(textFieldNome, "email")) {
 			rep.adicionarPessoa(p);
 		}
-		
-		if(rep.getPessoas().contains(p)) {
+		if(validaPessoaRep(p)) {
 			pessoaAdicionada = 1;
 			JOptionPane.showMessageDialog(null, "Pessoa adicionada com sucesso");
-			System.out.println(id + " " + nome + " " + email);
-			dispose();
 		} else{
 			pessoaAdicionada = 0;
 			JOptionPane.showMessageDialog(null, "Erro na hora de botar", "Erro", JOptionPane.WARNING_MESSAGE);
-			dispose();
+		}		
+		dispose();
+	}
+	
+	public boolean validaPessoaRep(Pessoa p) {
+		if(rep.getPessoas().contains(p)) {
+			 return true;
+		} else {
+			return false;
 		}		
 	}
 	
@@ -164,5 +184,24 @@ public class FormCadastro extends JDialog {
 	
 	public int getPessoaAdicionada() {
 		return pessoaAdicionada;
+	}
+	
+	public int getPessoaAtualizada() {
+		return pessoaAtualizada;
+	}
+	
+	public void atualizaPessoa(Pessoa p) {
+		if(validaPessoaRep(p)) {
+			if(validaTextField(textFieldNome, "nome") && validaTextField(textFieldEmail, "email")) {
+				p.setNome(textFieldNome.getText());
+				p.setEmail(textFieldEmail.getText());
+				pessoaAtualizada = 1;
+				JOptionPane.showMessageDialog(null, "Pessoa atualizada com sucesso");
+			} else {
+				pessoaAtualizada = 0;
+				JOptionPane.showMessageDialog(null, "Erro na hora de atualizar", "Erro", JOptionPane.WARNING_MESSAGE);
+			}
+		}
+		dispose();
 	}
 }
