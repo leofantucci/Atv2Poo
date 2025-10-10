@@ -14,7 +14,6 @@ import main.dados.Pessoa;
 import main.dados.Repositorio;
 
 import javax.swing.JScrollPane;
-import javax.swing.ScrollPaneConstants;
 import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -27,12 +26,9 @@ public class FormPrincipal extends JFrame {
 	private JPanel contentPane;
 	private JTable tabelaCliente;
 	private DefaultTableModel modelPessoa;
-	
+
 	private JButton btnConsultar = new JButton();
 
-	/**
-	 * Launch the application.
-	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -66,6 +62,7 @@ public class FormPrincipal extends JFrame {
 		containerHeader.setLayout(new FlowLayout());
 			
 		JButton btnIncluir = new JButton("Incluir");
+		btnIncluir.setMnemonic('I');
 		btnIncluir.setFont(new Font("Times New Roman", Font.PLAIN, 15));
 		btnIncluir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -75,18 +72,29 @@ public class FormPrincipal extends JFrame {
 		containerHeader.add(btnIncluir);
 		
 		JButton btnAlterar = new JButton("Alterar");
+		btnAlterar.setMnemonic('A');
+		btnAlterar.setFont(new Font("Times New Roman", Font.PLAIN, 15));
 		btnAlterar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				System.out.println(tabelaCliente.getSelectedRow());
+				int row = tabelaCliente.getSelectedRow();
 				
+				Pessoa p = getPessoaTabela(row);
+				alterarCadastro(p);
+
 			}
 		});
-		btnAlterar.setFont(new Font("Times New Roman", Font.PLAIN, 15));
 		containerHeader.add(btnAlterar);
 		
 		JButton btnExcluir = new JButton("Excluir");
+		btnExcluir.setMnemonic('E');
+		btnExcluir.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				removePessoa();
+			}
+		});
 		btnExcluir.setFont(new Font("Times New Roman", Font.PLAIN, 15));
 		containerHeader.add(btnExcluir);
+		btnConsultar.setMnemonic('C');
 		
 		btnConsultar.setText("Consultar");
 		btnConsultar.setFont(new Font("Times New Roman", Font.PLAIN, 15));
@@ -97,13 +105,14 @@ public class FormPrincipal extends JFrame {
 					atualizaTabela();
 					btnConsultar.setText("Consultar");
 				} else {
-					JOptionPane.showMessageDialog(FormPrincipal.this, "Ainda não existem dados cadastrados!", "Aviso", JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(null, "Ainda não existem dados cadastrados!", "Aviso", JOptionPane.WARNING_MESSAGE);
 				}
 			}
 		});
 		containerHeader.add(btnConsultar);
 		
 		JButton btnFechar = new JButton("Fechar");
+		btnFechar.setMnemonic('F');
 		btnFechar.setFont(new Font("Times New Roman", Font.PLAIN, 15));
 		containerHeader.add(btnFechar);
 		
@@ -115,13 +124,11 @@ public class FormPrincipal extends JFrame {
 		modelPessoa = new DefaultTableModel(colunas, 0) {
 			@Override
 		    public boolean isCellEditable(int row, int column) {
-		     
 		        return false;
 		    }
 		};
 		tabelaCliente.setModel(modelPessoa);
 		tabelaCliente.setFont(new Font("Comic Sans MS", Font.PLAIN, 11));
-		
 		tabelaCliente.getColumnModel().getColumn(0).setPreferredWidth(25);
 		tabelaCliente.getColumnModel().getColumn(1).setPreferredWidth(200);
 		tabelaCliente.getColumnModel().getColumn(2).setPreferredWidth(50);
@@ -134,12 +141,17 @@ public class FormPrincipal extends JFrame {
 	}
 	
 	public void abrirCadastro() {
-		FormCadastro tela = new FormCadastro(this, rep);
+		FormCadastro tela = new FormCadastro(0, null, this, rep);
 		
 		tela.setVisible(true);
 		if(tela.getPessoaAdicionada() == 1) {
 			btnConsultar.setText("Consultar (*)");
 		}
+	}
+	
+	public void alterarCadastro(Pessoa p) {
+		FormCadastro tela = new FormCadastro(1, p, this, rep);
+		tela.setVisible(true);
 	}
 	
 	public void atualizaTabela() {
@@ -151,6 +163,30 @@ public class FormPrincipal extends JFrame {
 					p.getEmail()
 			};
 			modelPessoa.addRow(pessoa);
+		}
+	}
+	
+	public Pessoa getPessoaTabela(int row) {
+		Pessoa pessoa = new Pessoa();
+		Object nome = tabelaCliente.getValueAt(row, 1);
+		Object email = tabelaCliente.getValueAt(row, 2);
+
+		pessoa.setId(row+1);
+		pessoa.setNome(nome.toString());
+		pessoa.setEmail(email.toString());
+		return pessoa;
+	}
+	
+	public void removePessoa() {
+		int id = tabelaCliente.getSelectedRow() + 1;
+		if(id <= 0) {
+			JOptionPane.showMessageDialog(null, "Erro! Não existem dados para serem tratados", "Erro", JOptionPane.ERROR_MESSAGE);
+		} else {
+			int deseja = JOptionPane.showConfirmDialog(this, "Deseja excluir a pessoa de ID: " + id + "?", "Confirma?", JOptionPane.YES_NO_OPTION);
+			if(deseja == 0) {
+				rep.removerPessoaPorId(id);
+				atualizaTabela();
+			}
 		}
 	}
 }

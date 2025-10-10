@@ -43,4 +43,12 @@ public class Repositorio {
 		return pessoas;
 	}
 	
+	public String getNomePorId(int id) {
+		return pessoas.get(id).getNome();
+	}
+	
+	public String getEmailPorId(int id) {
+		return pessoas.get(id).getEmail();
+	}
+	
 }

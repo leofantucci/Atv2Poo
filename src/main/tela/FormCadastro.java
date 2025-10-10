@@ -32,27 +32,19 @@ public class FormCadastro extends JDialog {
 	
 	private Repositorio rep;
 	private int pessoaAdicionada = 0;
-
-	/**
-	 * Launch the application.
-	 */
 	
-
-	/**
-	 * Create the dialog.
-	 */
-	
-	public FormCadastro(Frame parent, Repositorio rep) {
+	public FormCadastro(int key, Pessoa p, Frame parent, Repositorio rep) {
 	    super(parent, "Cadastro de Pessoa", true);
 	    this.rep = rep;
 		Pessoa p1 = new Pessoa();
 		p1.setId(rep.getIdAtual());
-		
+	
 		setBounds(100, 100, 450, 300);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
+		
 		JLabel lblId = new JLabel("Código (ID)");
 		lblId.setHorizontalAlignment(SwingConstants.CENTER);
 		lblId.setFont(new Font("Dialog", Font.PLAIN, 17));
@@ -86,20 +78,29 @@ public class FormCadastro extends JDialog {
 		contentPanel.add(textFieldEmail);
 
 		JLabel lblEmail = new JLabel("Email");
-		lblId.setHorizontalAlignment(SwingConstants.CENTER);
-		lblId.setFont(new Font("Dialog", Font.PLAIN, 17));
-		lblId.setBounds(138, 138, 160, 22);
-		contentPanel.add(lblId);
+		lblEmail.setHorizontalAlignment(SwingConstants.CENTER);
+		lblEmail.setFont(new Font("Dialog", Font.PLAIN, 17));
+		lblEmail.setBounds(138, 138, 160, 22);
+		contentPanel.add(lblEmail);
 	
 		JPanel buttonPane = new JPanel();
 		buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		getContentPane().add(buttonPane, BorderLayout.SOUTH);
 		
+		switch(key) {
+			case 1:
+			textFieldCodigo.setText(Integer.toString(p.getId())); 
+			textFieldNome.setText(p.getNome());
+			textFieldEmail.setText(p.getEmail());
+		}
+		
 		JButton btnCadastrar = new JButton("Cadastrar");
 		btnCadastrar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(validaTextField(textFieldNome, "Nome") && validaTextField(textFieldEmail, "Email")) {
-					salvarPessoa();
+					if(key == 0) {
+						salvarPessoa();
+					}
 				}	
 			}
 				});
@@ -141,12 +142,12 @@ public class FormCadastro extends JDialog {
 		
 		if(rep.getPessoas().contains(p)) {
 			pessoaAdicionada = 1;
-			JOptionPane.showMessageDialog(this, "Pessoa adicionada com sucesso");
+			JOptionPane.showMessageDialog(null, "Pessoa adicionada com sucesso");
 			System.out.println(id + " " + nome + " " + email);
 			dispose();
 		} else{
 			pessoaAdicionada = 0;
-			JOptionPane.showMessageDialog(this, "Erro na hora de botar", "Erro", JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Erro na hora de botar", "Erro", JOptionPane.WARNING_MESSAGE);
 			dispose();
 		}		
 	}
