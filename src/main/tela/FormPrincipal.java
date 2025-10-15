@@ -2,6 +2,8 @@ package main.tela;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
+
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -25,9 +27,6 @@ public class FormPrincipal extends JFrame {
 	private JTable tabelaCliente;
 	private DefaultTableModel modelPessoa;
 	
-	//private Color cor;
-	private int id;
-
 	private JButton btnConsultar = new JButton();
 
 	public static void main(String[] args) {
@@ -45,6 +44,8 @@ public class FormPrincipal extends JFrame {
 
 	public FormPrincipal() {
 		setBackground(new Color(64, 64, 64));
+		ImageIcon icone = new ImageIcon("icone.png");
+		setIconImage(icone.getImage());
 		setTitle("Tela Inicial");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(222, 222, 800, 400);

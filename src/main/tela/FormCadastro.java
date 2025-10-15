@@ -19,7 +19,6 @@ import java.awt.Frame;
 import javax.swing.SwingConstants;
 import java.awt.Color;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
 import java.awt.event.ActionEvent;
 
 public class FormCadastro extends JDialog {
