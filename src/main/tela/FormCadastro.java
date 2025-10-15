@@ -36,59 +36,72 @@ public class FormCadastro extends JDialog {
 	
 	public FormCadastro(int key, Pessoa p, Frame parent, Repositorio rep) {
 	    super(parent, "Cadastro de Pessoa", true);
+	    setBackground(new Color(64, 64, 64));
+	    getContentPane().setBackground(new Color(64, 64, 64));
 	    this.rep = rep;
 	    
 	    
 		setBounds(100, 100, 450, 300);
 		getContentPane().setLayout(new BorderLayout());
+		contentPanel.setBackground(new Color(64, 64, 64));
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
 		
 		JLabel lblId = new JLabel("Código (ID)");
+		lblId.setForeground(Color.white);
 		lblId.setHorizontalAlignment(SwingConstants.CENTER);
-		lblId.setFont(new Font("Dialog", Font.PLAIN, 17));
-		lblId.setBounds(138, 30, 160, 22);
+		lblId.setFont(new Font("Dialog", Font.PLAIN, 22));
+		lblId.setBounds(138, 16, 160, 32);
 		contentPanel.add(lblId);
 	
 		textFieldCodigo = new JTextField();
+		textFieldCodigo.setBackground(new Color(90, 90, 90));
 		textFieldCodigo.setEditable(false);
 		textFieldCodigo.setFocusable(false);
 		textFieldCodigo.setBackground(new Color(192, 192, 192));
-		textFieldCodigo.setBounds(138, 53, 160, 22);
+		textFieldCodigo.setBounds(107, 49, 222, 33);
 		contentPanel.add(textFieldCodigo);
 		textFieldCodigo.setText(String.valueOf(rep.getIdAtual()));
 		textFieldCodigo.setColumns(10);
 		
 		JLabel lblNome = new JLabel("Nome");
+		lblNome.setForeground(Color.white);
 		lblNome.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNome.setFont(new Font("Dialog", Font.PLAIN, 17));
-		lblNome.setBounds(138, 84, 160, 22);
+		lblNome.setFont(new Font("Dialog", Font.PLAIN, 22));
+		lblNome.setBounds(138, 85, 160, 22);
 		contentPanel.add(lblNome);
+		
 		textFieldNome = new JTextField();
+		textFieldNome.setBackground(new Color(90, 90, 90));
 		textFieldNome.requestFocusInWindow();
 		textFieldNome.setBackground(new Color(222, 222, 222));
 		textFieldNome.setColumns(10);
-		textFieldNome.setBounds(138, 106, 160, 22);
+		textFieldNome.setBounds(107, 111, 222, 33);
 		contentPanel.add(textFieldNome);
 		
 		textFieldEmail = new JTextField();
+		textFieldEmail.setBackground(new Color(90, 90, 90));
 		textFieldEmail.setBackground(new Color(222, 222, 222));
 		textFieldEmail.setColumns(10);
-		textFieldEmail.setBounds(138, 160, 160, 22);
+		textFieldEmail.setBounds(107, 171, 222, 33);
 		contentPanel.add(textFieldEmail);
 
 		JLabel lblEmail = new JLabel("Email");
+		lblEmail.setForeground(Color.white);
 		lblEmail.setHorizontalAlignment(SwingConstants.CENTER);
-		lblEmail.setFont(new Font("Dialog", Font.PLAIN, 17));
-		lblEmail.setBounds(138, 138, 160, 22);
+		lblEmail.setFont(new Font("Dialog", Font.PLAIN, 22));
+		lblEmail.setBounds(138, 147, 160, 22);
 		contentPanel.add(lblEmail);
 	
 		JPanel buttonPane = new JPanel();
+		buttonPane.setBackground(new Color(64, 64, 64));
 		buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		getContentPane().add(buttonPane, BorderLayout.SOUTH);
 		
 		JButton btnCadastrar = new JButton("Cadastrar");
+		btnCadastrar.setBackground(new Color(144, 144, 144));
+		btnCadastrar.setForeground(Color.WHITE);
 		btnCadastrar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(validaTextField(textFieldNome, "Nome") && validaTextField(textFieldEmail, "Email")) {
@@ -103,17 +116,20 @@ public class FormCadastro extends JDialog {
 				}	
 			}
 				});
-				btnCadastrar.setFont(new Font("Tahoma", Font.PLAIN, 14));
+				btnCadastrar.setFont(new Font("Tahoma", Font.PLAIN, 16));
 				btnCadastrar.setActionCommand("OK");
 				buttonPane.add(btnCadastrar);
 				getRootPane().setDefaultButton(btnCadastrar);
+				
 				JButton btnCancelar = new JButton("Cancelar");
+				btnCancelar.setBackground(new Color(144, 144, 144));
+				btnCancelar.setForeground(Color.WHITE);
 				btnCancelar.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						dispose();
 					}
 				});
-				btnCancelar.setFont(new Font("Tahoma", Font.PLAIN, 14));
+				btnCancelar.setFont(new Font("Tahoma", Font.PLAIN, 16));
 				btnCancelar.setActionCommand("Cancel");
 				buttonPane.add(btnCancelar);
 				
