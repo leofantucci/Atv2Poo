@@ -77,12 +77,16 @@ public class FormPrincipal extends JFrame {
 		btnAlterar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 					int row = tabelaCliente.getSelectedRow();
-					if(row == -1) {
-						msgErroDados(1);
+					if(tabelaVazia()) {
+						JOptionPane.showMessageDialog(null, "Erro! A tabela está vazia", "Erro", JOptionPane.ERROR_MESSAGE);
 					} else {
-						Pessoa p = getPessoaTabela(row);
-						alterarCadastro(p);
-						atualizaTabela();
+						if(row == -1) {
+							JOptionPane.showMessageDialog(null, "Aviso! Selecione uma linha para alterar", "Aviso", JOptionPane.WARNING_MESSAGE);
+						} else {
+							Pessoa p = getPessoaTabela(row);
+							alterarCadastro(p);
+							atualizaTabela();	
+						}
 					}
 			}
 				});
@@ -107,11 +111,16 @@ public class FormPrincipal extends JFrame {
 		btnConsultar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int row = tabelaCliente.getSelectedRow();
-				if(tabelaCliente.getSelectedRow() == -1) {
-					msgErroDados(1);
-				}else {
-					Pessoa p = getPessoaTabela(row);
-					consultaCadastro(p);
+				if(tabelaVazia()) {
+					JOptionPane.showMessageDialog(null, "Erro! A tabela está vazia", "Erro", JOptionPane.ERROR_MESSAGE);
+
+				} else {
+					if(tabelaCliente.getSelectedRow() == -1) {
+						JOptionPane.showMessageDialog(null, "Aviso! Selecione uma linha para consultar", "Aviso", JOptionPane.WARNING_MESSAGE);
+					}else {
+						Pessoa p = getPessoaTabela(row);
+						consultaCadastro(p);
+					}	
 				}
 			}
 		});
@@ -133,22 +142,22 @@ public class FormPrincipal extends JFrame {
 		tabelaCliente.setBounds(0, 0, 6, 6);
 		String[] colunas = {"C\u00F3digo", "Nome", "Email"};
 		modelPessoa = new DefaultTableModel(colunas, 0) {
+			private static final long serialVersionUID = 1L;
+
 			@Override
 		    public boolean isCellEditable(int row, int column) {
 		        return false;
 		    }
 		};
 		tabelaCliente.setModel(modelPessoa);
-		tabelaCliente.setFont(new Font("Comic Sans MS", Font.PLAIN, 11));
+		tabelaCliente.setFont(new Font("Comic Sans MS", Font.PLAIN, 13));
 		tabelaCliente.getColumnModel().getColumn(0).setPreferredWidth(25);
 		tabelaCliente.getColumnModel().getColumn(1).setPreferredWidth(200);
 		tabelaCliente.getColumnModel().getColumn(2).setPreferredWidth(50);
 
 		JScrollPane scrollPane = new JScrollPane(tabelaCliente);
 		contentPane.add(BorderLayout.CENTER, scrollPane);		
-		
-		int linhaSelecionada = tabelaCliente.getSelectedRow();
-		
+				
 		JButton btnRemoverSelecao = new JButton("Remover Seleção");
 		btnRemoverSelecao.setVisible(false);
 		btnRemoverSelecao.addActionListener(new ActionListener() {
@@ -177,7 +186,10 @@ public class FormPrincipal extends JFrame {
 	}
 	
 	public void alterarCadastro(Pessoa p) {
-		if(tabelaCliente.getSelectedRow() == -1) {
+		if(tabelaVazia()) {
+			JOptionPane.showMessageDialog(null, "Erro! A tabela está vazia", "Erro", JOptionPane.ERROR_MESSAGE);
+		}
+		else if(tabelaCliente.getSelectedRow() == -1) {
 			JOptionPane.showMessageDialog(null, "Aviso! Selecione uma linha para alterar", "Aviso", JOptionPane.WARNING_MESSAGE);
 		}else {
 			FormCadastro tela = new FormCadastro(1, p, this, rep);
@@ -209,22 +221,21 @@ public class FormPrincipal extends JFrame {
 	}
 	
 	public Pessoa getPessoaTabela(int row) {
-		Pessoa pessoa = new Pessoa();
 		int id = (int) tabelaCliente.getValueAt(row, 0);
 		return rep.getPessoaPorId(id);
 	}
 	
 	public void removePessoa() {
-		id = tabelaCliente.getSelectedRow() + 1;
 		if(tabelaVazia()) {
-			msgErroDados(0);
+			JOptionPane.showMessageDialog(null, "Erro! A tabela está vazia", "Erro", JOptionPane.ERROR_MESSAGE);
 		} 
 		else if(tabelaCliente.getSelectedRow() == -1) {
-			msgErroDados(1);
+			JOptionPane.showMessageDialog(null, "Selecione uma linha para excluir!", "Aviso!", JOptionPane.WARNING_MESSAGE);
 		} else {
-			int deseja = JOptionPane.showConfirmDialog(this, "Deseja excluir a pessoa de ID: " + id + "?", "Confirma?", JOptionPane.YES_NO_OPTION);
+			Pessoa p1 = getPessoaTabela(tabelaCliente.getSelectedRow());
+			int deseja = JOptionPane.showConfirmDialog(this, "Deseja excluir a pessoa de ID: " + p1.getId() + "?", "Confirma?", JOptionPane.YES_NO_OPTION);
 			if(deseja == 0) {
-				rep.removerPessoaPorId(id);
+				rep.removerPessoa(p1);
 				atualizaTabela();
 			}
 		}
@@ -235,17 +246,6 @@ public class FormPrincipal extends JFrame {
 			return true;
 		} else {
 			return false;
-		}
-	}
-	
-	public void msgErroDados(int key) { // KEY = 0: Não tem dados - 1: Sem linhas selecionadas
-		switch(key) {
-		case 0:
-			JOptionPane.showMessageDialog(null, "Erro! Não existem dados para serem tratados", "Erro", JOptionPane.ERROR_MESSAGE);
-			break;
-		case 1:
-			JOptionPane.showMessageDialog(null, "Aviso! Não existe nenhuma linha selecionada", "Aviso", JOptionPane.WARNING_MESSAGE);
-			break;
 		}
 	}
 }

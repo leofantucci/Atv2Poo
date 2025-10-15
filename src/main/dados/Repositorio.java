@@ -26,9 +26,8 @@ public class Repositorio {
 		}
 	}
 	
-	public void removerPessoaPorId(int id) {
-		int pos = id - 1;
-		pessoas.remove(pos);
+	public void removerPessoaPorId(Pessoa p) {
+		pessoas.remove(p);
 	}
 	
 	public void removerPessoa(Pessoa p) {

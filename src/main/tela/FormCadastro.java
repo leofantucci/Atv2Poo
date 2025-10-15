@@ -5,7 +5,6 @@ import java.awt.FlowLayout;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
@@ -20,6 +19,7 @@ import java.awt.Frame;
 import javax.swing.SwingConstants;
 import java.awt.Color;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
 import java.awt.event.ActionEvent;
 
 public class FormCadastro extends JDialog {
@@ -38,6 +38,7 @@ public class FormCadastro extends JDialog {
 	    super(parent, "Cadastro de Pessoa", true);
 	    this.rep = rep;
 	    
+	    
 		setBounds(100, 100, 450, 300);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -52,6 +53,7 @@ public class FormCadastro extends JDialog {
 	
 		textFieldCodigo = new JTextField();
 		textFieldCodigo.setEditable(false);
+		textFieldCodigo.setFocusable(false);
 		textFieldCodigo.setBackground(new Color(192, 192, 192));
 		textFieldCodigo.setBounds(138, 53, 160, 22);
 		contentPanel.add(textFieldCodigo);
@@ -64,7 +66,7 @@ public class FormCadastro extends JDialog {
 		lblNome.setBounds(138, 84, 160, 22);
 		contentPanel.add(lblNome);
 		textFieldNome = new JTextField();
-		textFieldNome.requestFocus();
+		textFieldNome.requestFocusInWindow();
 		textFieldNome.setBackground(new Color(222, 222, 222));
 		textFieldNome.setColumns(10);
 		textFieldNome.setBounds(138, 106, 160, 22);
@@ -134,6 +136,7 @@ public class FormCadastro extends JDialog {
 					btnCadastrar.setVisible(false);
 					break;
 			}
+		
 	}
 	
 	public Repositorio criarRep() {
@@ -146,9 +149,6 @@ public class FormCadastro extends JDialog {
 	    p.setId(Integer.parseInt(textFieldCodigo.getText().trim()));
 	    p.setNome(textFieldNome.getText().trim());
 	    p.setEmail(textFieldEmail.getText().trim());
-		String id = textFieldCodigo.getText().trim();
-		String nome = textFieldNome.getText().trim();
-		String email = textFieldEmail.getText().trim();
 		System.out.println(pessoaAdicionada);
 
 		if(validaTextField(textFieldNome, "nome") && validaTextField(textFieldNome, "email")) {
